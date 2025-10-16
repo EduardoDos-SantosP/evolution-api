@@ -830,6 +830,7 @@ export class BusinessStartupService extends ChannelStartupService {
     }
 
     if (message?.mediaType === 'video') {
+      delete message.media; // Exclui base64 para economizar espaço
       if (content?.context?.message_id) {
         convertMessage = {
           videoMessage: message,
@@ -1004,8 +1005,9 @@ export class BusinessStartupService extends ChannelStartupService {
             [message['mediaType']]: {
               [message['type']]: message['id'],
               ...(message['mediaType'] !== 'audio' &&
-                message['fileName'] &&
-                !isImage && { filename: message['fileName'] }),
+                  message['fileName'] &&
+                  !isImage &&
+                  message['mediaType'] !== 'video' && { filename: message['fileName'] }),
               ...(message['mediaType'] !== 'audio' && message['caption'] && { caption: message['caption'] }),
             },
           };
